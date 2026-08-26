@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(ml-from-scratch-cpp
+project(ml-from-scratch
     VERSION 0.1.0
     LANGUAGES CXX
 )
@@ -39,5 +39,21 @@ target_link_libraries(test_matrix
         ml_from_scratch
 )
 
+add_executable(test_dataset
+    tests/core/test_dataset.cpp
+)
+
+target_link_libraries(test_dataset
+    PRIVATE
+        ml_from_scratch
+)
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(test_vector PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(test_matrix PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(test_dataset PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
 add_test(NAME VectorTests COMMAND test_vector)
 add_test(NAME MatrixTests COMMAND test_matrix)
+add_test(NAME DatasetTests COMMAND test_dataset)

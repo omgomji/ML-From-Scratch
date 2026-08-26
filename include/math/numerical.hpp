@@ -206,7 +206,7 @@ inline double clip(double x, double min_val, double max_val) {
  * 
  * Used to prevent log(0) in cross-entropy loss.
  */
-inline double clip_probability(double p, double eps = 1e-15) {
+inline double clip_probability(double p, double eps = DIVISION_TOL) {
     return std::clamp(p, eps, 1.0 - eps);
 }
 

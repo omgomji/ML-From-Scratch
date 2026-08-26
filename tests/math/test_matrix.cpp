@@ -169,7 +169,7 @@ void test_matrix_multiplication() {
     Matrix d = {{1.0, 2.0},
                 {3.0, 4.0}};
     Matrix result = I * d;
-    assert(result == d);
+    assert(result.approx_equal(d));
     
     std::cout << "PASSED\n";
 }

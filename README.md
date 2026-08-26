@@ -6,31 +6,28 @@ The project is being developed incrementally, starting with the mathematical and
 
 ## Current Status
 
-The project is currently focused on the **mathematical foundation**, including:
-
-- Numerical utilities
-- Vector operations
-- Matrix operations
-- Linear algebra utilities
-- Unit tests for the mathematical components
-
-More functionality will be added progressively.
+The project currently provides mathematical foundations together with core dataset utilities and model evaluation metrics. ML models will be added incrementally on top of these components.
 
 ## Project Structure
 
 ```text
 .
 ├── include/
-│   └── math/
-│       ├── numerical.hpp
-│       ├── vector.hpp
-│       ├── matrix.hpp
-│       └── linalg.hpp
+│   ├── math/
+│   │   ├── numerical.hpp
+│   │   ├── vector.hpp
+│   │   ├── matrix.hpp
+│   │   └── linalg.hpp
+│   └── core/
+│       ├── dataset.hpp
+│       └── metrics.hpp
 │
 ├── tests/
-│   └── math/
-│       ├── test_vector.cpp
-│       └── test_matrix.cpp
+│   ├── math/
+│   │   ├── test_vector.cpp
+│   │   └── test_matrix.cpp
+│   └── core/
+│       └── test_dataset.cpp
 │
 ├── .gitignore
 ├── CMakeLists.txt

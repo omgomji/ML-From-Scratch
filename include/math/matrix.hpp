@@ -27,16 +27,6 @@
 #include <sstream>
 #include <functional>
 
-// Compiler hint: inner loop has no aliasing — enables SIMD auto-vectorization
-// (SSE4, AVX2, AVX-512 depending on -march flag) without external intrinsics.
-#if defined(__GNUC__) || defined(__clang__)
-  #define ML_VECTORIZE _Pragma("GCC ivdep")
-#elif defined(_MSC_VER)
-  #define ML_VECTORIZE __pragma(loop(ivdep))
-#else
-  #define ML_VECTORIZE
-#endif
-
 namespace ml {
 namespace math {
 
@@ -429,7 +419,6 @@ public:
             const size_t row = static_cast<size_t>(i);
             const double* row_ptr = data_.data() + row * cols_;
             double sum = 0.0;
-            ML_VECTORIZE
             for (size_t j = 0; j < cols_; ++j) {
                 sum += row_ptr[j] * v_data[j];
             }
@@ -609,7 +598,6 @@ public:
             const double inv_pivot = 1.0 / LU(col, col);
             for (size_t row = col + 1; row < n; ++row) {
                 LU(row, col) *= inv_pivot;  // Store multiplier in lower triangle
-                ML_VECTORIZE
                 for (size_t j = col + 1; j < n; ++j) {
                     LU(row, j) -= LU(row, col) * LU(col, j);
                 }
