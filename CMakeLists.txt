@@ -58,15 +58,38 @@ target_link_libraries(test_matrix
         ml_from_scratch
 )
 
+add_executable(test_dataset
+    tests/include/core/test_dataset.cpp
+)
+
+target_link_libraries(test_dataset
+    PRIVATE
+        ml_from_scratch
+)
+
+add_executable(test_metrics
+    tests/include/core/test_metrics.cpp
+)
+
+target_link_libraries(test_metrics
+    PRIVATE
+        ml_from_scratch
+)
+
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(test_numerical PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_linalg PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_vector PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_matrix PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(test_dataset PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(test_metrics PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 add_test(NAME NumericalTests COMMAND test_numerical)
 add_test(NAME LinalgTests COMMAND test_linalg)
 add_test(NAME VectorTests COMMAND test_vector)
 add_test(NAME MatrixTests COMMAND test_matrix)
+add_test(NAME DatasetTests COMMAND test_dataset)
+add_test(NAME MetricsTests COMMAND test_metrics)
+
