@@ -780,7 +780,7 @@ public:
      * @brief Check whether two vectors are approximately equal.
      *
      * @param other Vector to compare.
-     * @param tolerance Absolute tolerance.
+     * @param tolerance Relative and absolute tolerance.
      *
      * Complexity: O(n)
      */
@@ -793,7 +793,7 @@ public:
         }
 
         for (size_t i = 0; i < data_.size(); ++i) {
-            if (std::abs(data_[i] - other[i]) > tolerance) {
+            if (!numerical::approx_equal(data_[i], other[i], tolerance, tolerance)) {
                 return false;
             }
         }

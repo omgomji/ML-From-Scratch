@@ -98,8 +98,8 @@ void test_row_and_column() {
     A.set_row(1, Vector{7.0, 8.0, 9.0});
     A.set_col(0, Vector{10.0, 11.0});
 
-    assert(A.row(1) == Vector{7.0, 8.0, 9.0});
-    assert(A.col(0) == Vector{10.0, 7.0});
+    assert(A.row(1) == Vector{11.0, 8.0, 9.0});
+    assert(A.col(0) == Vector{10.0, 11.0});
 }
 
 void test_matrix_arithmetic() {
@@ -312,7 +312,7 @@ void test_hstack_and_vstack() {
     Matrix A{{1.0, 2.0}, {3.0, 4.0}};
     Matrix B{{5.0}, {6.0}};
 
-    Matrix H = Matrix::hstack(A, B);
+    Matrix H = A.hstack(B);
 
     assert_matrix_close(
         H,
@@ -324,7 +324,7 @@ void test_hstack_and_vstack() {
 
     Matrix C{{5.0, 6.0}};
 
-    Matrix V = Matrix::vstack(A, C);
+    Matrix V = A.vstack(C);
 
     assert_matrix_close(
         V,

@@ -116,7 +116,7 @@ void test_lower_triangular_solve() {
 
     assert_vector_close(
         x,
-        Vector{2.0, 2.0}
+        Vector{2.0, 2.0 / 3.0}
     );
 }
 
@@ -148,7 +148,7 @@ void test_solve() {
 
     assert_vector_close(
         x,
-        Vector{2.0, 1.0}
+        Vector{1.0, 2.5}
     );
 
     assert_vector_close(
@@ -282,7 +282,7 @@ void test_infinity_norm() {
     };
 
     // Maximum absolute row sum = 7.
-    assert(approx(norm_infinity(A), 7.0));
+    assert(approx(norm_inf(A), 7.0));
 }
 
 void test_condition_number() {

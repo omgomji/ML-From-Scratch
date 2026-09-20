@@ -139,13 +139,13 @@ void test_norms() {
     assert(approx(v.norm_l2_squared(), 25.0));
     assert(approx(v.norm_l2(), 5.0));
     assert(approx(v.norm_l1(), 7.0));
-    assert(approx(v.norm_inf(), 4.0));
+    assert(approx(v.norm_linf(), 4.0));
 }
 
 void test_normalize() {
     Vector v{3.0, 4.0};
 
-    Vector normalized = v.normalized();
+    Vector normalized = v.normalize();
 
     assert(approx(normalized.norm_l2(), 1.0));
     assert(approx(normalized[0], 0.6));

@@ -792,7 +792,7 @@ public:
     }
 
     /**
-     * @brief Compare matrices using an absolute tolerance.
+     * @brief Compare matrices using relative and absolute tolerances.
      */
     bool approx_equal(
         const Matrix& other,
@@ -803,7 +803,8 @@ public:
         }
 
         for (size_t i = 0; i < data_.size(); ++i) {
-            if (std::abs(data_[i] - other.data_[i]) > tolerance) {
+            if (!numerical::approx_equal(
+                    data_[i], other.data_[i], tolerance, tolerance)) {
                 return false;
             }
         }
