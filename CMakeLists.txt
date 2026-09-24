@@ -76,6 +76,16 @@ target_link_libraries(test_metrics
         ml_from_scratch
 )
 
+add_executable(test_linear_regression
+    tests/include/models/test_linear_regression.cpp
+)
+
+target_link_libraries(test_linear_regression
+    PRIVATE
+        ml_from_scratch
+)
+
+
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(test_numerical PRIVATE -Wall -Wextra -Wpedantic)
@@ -84,6 +94,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(test_matrix PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_dataset PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_metrics PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(test_linear_regression PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 add_test(NAME NumericalTests COMMAND test_numerical)
@@ -92,4 +103,6 @@ add_test(NAME VectorTests COMMAND test_vector)
 add_test(NAME MatrixTests COMMAND test_matrix)
 add_test(NAME DatasetTests COMMAND test_dataset)
 add_test(NAME MetricsTests COMMAND test_metrics)
+add_test(NAME LinearRegressionTests COMMAND test_linear_regression)
+
 
