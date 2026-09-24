@@ -2,19 +2,21 @@
 
 A small, readable C++ machine learning library focused on implementing ML concepts from first principles.
 
-The goal of this project is to understand how machine learning algorithms work by implementing their underlying mathematics and algorithms directly in modern C++, rather than hiding the implementation behind high-level abstractions.
+The goal is to understand how machine learning algorithms work by implementing their underlying mathematics and algorithms directly in modern C++, rather than hiding the implementation behind high-level abstractions.
 
 ## Project Goals
 
 * Implement machine learning concepts from first principles.
 * Keep implementations readable and close to the underlying mathematics.
-* Build reusable mathematical components where they are actually useful.
+* Build reusable components only where they are actually useful.
 * Validate implementations with focused tests.
 * Gradually build toward complete machine learning models and practical labs.
 
 ## Current Status
 
-The project currently contains the foundational mathematical layer:
+The project currently contains the mathematical foundation and basic core utilities.
+
+### Mathematical Foundation
 
 * **Numerical utilities**
 
@@ -60,21 +62,55 @@ The project currently contains the foundational mathematical layer:
   * Matrix norms
   * Condition number
 
+### Core Utilities
+
+* **Dataset**
+
+  * Simple feature/target dataset container
+  * Numerical CSV loading
+  * Train/test splitting
+  * Train/validation/test splitting
+  * Deterministic shuffling with seeds
+
+* **Evaluation metrics**
+
+  * Mean squared error (MSE)
+  * Root mean squared error (RMSE)
+  * Mean absolute error (MAE)
+  * R² score
+  * Accuracy
+  * Confusion matrix
+  * Precision
+  * Recall
+  * F1 score
+  * Log loss
+
 ## Project Structure
 
 ```text
 ml-from-scratch-cpp/
+│
 ├── CMakeLists.txt
 ├── LICENSE
 ├── README.md
+│
 ├── include/
+│   ├── core/
+│   │   ├── dataset.hpp
+│   │   └── metrics.hpp
+│   │
 │   └── math/
 │       ├── linalg.hpp
 │       ├── matrix.hpp
 │       ├── numerical.hpp
 │       └── vector.hpp
+│
 └── tests/
     └── include/
+        ├── core/
+        │   ├── test_dataset.cpp
+        │   └── test_metrics.cpp
+        │
         └── math/
             ├── test_linalg.cpp
             ├── test_matrix.cpp
@@ -108,13 +144,15 @@ Run the complete test suite with:
 ctest --test-dir build --output-on-failure
 ```
 
-Individual test executables are also generated for the current mathematical components:
+The current test suite covers:
 
 ```text
 test_numerical
 test_vector
 test_matrix
 test_linalg
+test_dataset
+test_metrics
 ```
 
 ## Design Philosophy
@@ -139,7 +177,7 @@ The project will gradually move from mathematical foundations toward machine lea
 Planned areas include:
 
 1. Mathematical and statistical foundations
-2. Data preprocessing
+2. Data handling and preprocessing
 3. Regression
 4. Classification
 5. Clustering
