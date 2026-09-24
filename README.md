@@ -14,7 +14,7 @@ The goal is to understand how machine learning algorithms work by implementing t
 
 ## Current Status
 
-The project currently contains the mathematical foundation and basic core utilities.
+The project currently contains the mathematical foundation, basic core utilities, and the first machine learning model.
 
 ### Mathematical Foundation
 
@@ -85,6 +85,15 @@ The project currently contains the mathematical foundation and basic core utilit
   * F1 score
   * Log loss
 
+### Models
+
+* **Linear Regression**
+
+  * Normal Equation
+  * Batch Gradient Descent
+  * Optional intercept
+  * Single-sample and batch prediction
+
 ## Project Structure
 
 ```text
@@ -99,11 +108,14 @@ ml-from-scratch-cpp/
 │   │   ├── dataset.hpp
 │   │   └── metrics.hpp
 │   │
-│   └── math/
-│       ├── linalg.hpp
-│       ├── matrix.hpp
-│       ├── numerical.hpp
-│       └── vector.hpp
+│   ├── math/
+│   │   ├── linalg.hpp
+│   │   ├── matrix.hpp
+│   │   ├── numerical.hpp
+│   │   └── vector.hpp
+│   │
+│   └── models/
+│       └── linear_regression.hpp
 │
 └── tests/
     └── include/
@@ -111,11 +123,14 @@ ml-from-scratch-cpp/
         │   ├── test_dataset.cpp
         │   └── test_metrics.cpp
         │
-        └── math/
-            ├── test_linalg.cpp
-            ├── test_matrix.cpp
-            ├── test_numerical.cpp
-            └── test_vector.cpp
+        ├── math/
+        │   ├── test_linalg.cpp
+        │   ├── test_matrix.cpp
+        │   ├── test_numerical.cpp
+        │   └── test_vector.cpp
+        │
+        └── models/
+            └── test_linear_regression.cpp
 ```
 
 The project structure will grow as new concepts, models, and experiments are implemented.
@@ -153,6 +168,7 @@ test_matrix
 test_linalg
 test_dataset
 test_metrics
+test_linear_regression
 ```
 
 ## Design Philosophy
