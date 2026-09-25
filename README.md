@@ -14,7 +14,7 @@ The goal is to understand how machine learning algorithms work by implementing t
 
 ## Current Status
 
-The project currently contains the mathematical foundation, basic core utilities, and the first machine learning model.
+The project currently contains the mathematical foundation, basic core utilities, and the first regression and classification models.
 
 ### Mathematical Foundation
 
@@ -94,6 +94,17 @@ The project currently contains the mathematical foundation, basic core utilities
   * Optional intercept
   * Single-sample and batch prediction
 
+* **Logistic Regression**
+
+  * Binary classification
+  * Batch Gradient Descent
+  * Sigmoid-based probability estimation
+  * Binary class prediction
+  * Optional intercept
+  * Single-sample and batch prediction
+  * Input and fitted-state validation
+  * Numerically stable sigmoid computation
+
 ## Project Structure
 
 ```text
@@ -115,7 +126,8 @@ ml-from-scratch-cpp/
 │   │   └── vector.hpp
 │   │
 │   └── models/
-│       └── linear_regression.hpp
+│       ├── linear_regression.hpp
+│       └── logistic_regression.hpp
 │
 └── tests/
     └── include/
@@ -130,7 +142,8 @@ ml-from-scratch-cpp/
         │   └── test_vector.cpp
         │
         └── models/
-            └── test_linear_regression.cpp
+            ├── test_linear_regression.cpp
+            └── test_logistic_regression.cpp
 ```
 
 The project structure will grow as new concepts, models, and experiments are implemented.
@@ -169,7 +182,21 @@ test_linalg
 test_dataset
 test_metrics
 test_linear_regression
+test_logistic_regression
 ```
+
+The Logistic Regression tests cover:
+
+* Binary classification on linearly separable data
+* Probability prediction
+* Class prediction
+* Single-sample prediction
+* Optional intercept
+* Invalid target labels
+* Invalid input dimensions
+* Prediction before fitting
+* Feature dimension mismatch
+* Numerical stability
 
 ## Design Philosophy
 
