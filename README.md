@@ -85,6 +85,15 @@ The project currently contains the mathematical foundation, basic core utilities
   * F1 score
   * Log loss
 
+### Preprocessing
+
+* **StandardScaler**
+
+  * Feature-wise standardization
+  * Population standard deviation
+  * Train/test-safe transform behavior
+  * Zero-variance feature handling
+
 ### Models
 
 * **Linear Regression**
@@ -125,6 +134,9 @@ ml-from-scratch-cpp/
 │   │   ├── numerical.hpp
 │   │   └── vector.hpp
 │   │
+│   ├── preprocessing/
+│   │   └── standard_scaler.hpp
+│   │
 │   └── models/
 │       ├── linear_regression.hpp
 │       └── logistic_regression.hpp
@@ -140,6 +152,9 @@ ml-from-scratch-cpp/
         │   ├── test_matrix.cpp
         │   ├── test_numerical.cpp
         │   └── test_vector.cpp
+        │
+        ├── preprocessing/
+        │   └── test_standard_scaler.cpp
         │
         └── models/
             ├── test_linear_regression.cpp
@@ -183,7 +198,11 @@ test_dataset
 test_metrics
 test_linear_regression
 test_logistic_regression
+test_standard_scaler
 ```
+
+The StandardScaler tests cover feature-wise population standardization,
+train/test-safe transformations, constant features, and invalid input.
 
 The Logistic Regression tests cover:
 

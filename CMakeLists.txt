@@ -94,6 +94,15 @@ target_link_libraries(test_logistic_regression
         ml_from_scratch
 )
 
+add_executable(test_standard_scaler
+    tests/include/preprocessing/test_standard_scaler.cpp
+)
+
+target_link_libraries(test_standard_scaler
+    PRIVATE
+        ml_from_scratch
+)
+
 
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -105,6 +114,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(test_metrics PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_linear_regression PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_logistic_regression PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(test_standard_scaler PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 add_test(NAME NumericalTests COMMAND test_numerical)
@@ -115,3 +125,4 @@ add_test(NAME DatasetTests COMMAND test_dataset)
 add_test(NAME MetricsTests COMMAND test_metrics)
 add_test(NAME LinearRegressionTests COMMAND test_linear_regression)
 add_test(NAME LogisticRegressionTests COMMAND test_logistic_regression)
+add_test(NAME StandardScalerTests COMMAND test_standard_scaler)
