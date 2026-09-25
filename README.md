@@ -14,7 +14,7 @@ The goal is to understand how machine learning algorithms work by implementing t
 
 ## Current Status
 
-The project currently contains the mathematical foundation, basic core utilities, and the first regression and classification models.
+The project currently contains the mathematical foundation, basic core utilities, preprocessing, and the first regression and classification models.
 
 ### Mathematical Foundation
 
@@ -114,6 +114,14 @@ The project currently contains the mathematical foundation, basic core utilities
   * Input and fitted-state validation
   * Numerically stable sigmoid computation
 
+* **K-Nearest Neighbors**
+
+  * Classification using Euclidean distance
+  * Majority voting
+  * Configurable number of neighbors (`k`)
+  * Single-sample and batch prediction
+  * Input and fitted-state validation
+
 ## Project Structure
 
 ```text
@@ -138,6 +146,7 @@ ml-from-scratch-cpp/
 │   │   └── standard_scaler.hpp
 │   │
 │   └── models/
+│       ├── knn.hpp
 │       ├── linear_regression.hpp
 │       └── logistic_regression.hpp
 │
@@ -157,6 +166,7 @@ ml-from-scratch-cpp/
         │   └── test_standard_scaler.cpp
         │
         └── models/
+            ├── test_knn.cpp
             ├── test_linear_regression.cpp
             └── test_logistic_regression.cpp
 ```
@@ -199,9 +209,11 @@ test_metrics
 test_linear_regression
 test_logistic_regression
 test_standard_scaler
+test_knn
 ```
 
 The StandardScaler tests cover feature-wise population standardization,
+
 train/test-safe transformations, constant features, and invalid input.
 
 The Logistic Regression tests cover:
@@ -216,6 +228,18 @@ The Logistic Regression tests cover:
 * Prediction before fitting
 * Feature dimension mismatch
 * Numerical stability
+
+The KNN tests cover:
+
+* Basic classification
+* Single-sample prediction
+* `k = 1` behaviour
+* Fitted-state validation
+* Invalid `k`
+* Invalid training dimensions
+* Prediction before fitting
+* Prediction feature dimension mismatch
+* Invalid class labels
 
 ## Design Philosophy
 
