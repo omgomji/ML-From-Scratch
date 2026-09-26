@@ -218,8 +218,6 @@ ml-from-scratch-cpp/
             └── test_naive_bayes.cpp
 ```
 
-The project structure will grow as new concepts, models, and experiments are implemented.
-
 ## Building
 
 The project uses CMake and requires a C++17-compatible compiler.
@@ -236,6 +234,9 @@ Build:
 cmake --build build
 ```
 
+Tests are enabled by default. To configure the header-only library without
+test targets, set `BUILD_TESTING=OFF` when configuring CMake.
+
 ## Running Tests
 
 Run the complete test suite with:
@@ -244,100 +245,8 @@ Run the complete test suite with:
 ctest --test-dir build --output-on-failure
 ```
 
-The current test suite covers:
-
-```text
-test_numerical
-test_vector
-test_matrix
-test_linalg
-test_dataset
-test_metrics
-test_linear_regression
-test_logistic_regression
-test_standard_scaler
-test_knn
-test_decision_tree
-test_naive_bayes
-test_kmeans
-```
-
-The StandardScaler tests cover feature-wise population standardization,
-
-train/test-safe transformations, constant features, and invalid input.
-
-The Logistic Regression tests cover:
-
-* Binary classification on linearly separable data
-* Probability prediction
-* Class prediction
-* Single-sample prediction
-* Optional intercept
-* Invalid target labels
-* Invalid input dimensions
-* Prediction before fitting
-* Feature dimension mismatch
-* Numerical stability
-
-The KNN tests cover:
-
-* Basic classification
-* Single-sample prediction
-* `k = 1` behaviour
-* Fitted-state validation
-* Invalid `k`
-* Invalid training dimensions
-* Prediction before fitting
-* Prediction feature dimension mismatch
-* Invalid class labels
-
-The Decision Tree tests cover:
-
-* Basic classification
-* Single-sample prediction
-* Multi-level tree construction
-* Majority-class leaf prediction
-* Maximum depth
-* Minimum samples per leaf
-* Fitted-state validation
-* Invalid constructor parameters
-* Invalid training dimensions
-* Invalid class labels
-* Non-finite feature values
-* Prediction before fitting
-* Prediction feature dimension mismatch
-
-The Naive Bayes tests cover:
-
-* Basic Gaussian Naive Bayes classification
-* Multiclass classification
-* Non-contiguous class labels
-* Learned class priors
-* Learned feature means and variances
-* Class probability prediction
-* Single-sample prediction
-* Constant-feature variance handling
-* Fitted-state validation
-* Invalid constructor parameters
-* Invalid training data
-* Invalid prediction input
-
-The K-Means tests cover:
-
-* Basic clustering
-* Learned centroid values
-* Single-sample prediction
-* Batch prediction
-* Distance transformation
-* `fit_predict`
-* Deterministic fitting with a fixed seed
-* Fitted-state validation
-* Invalid constructor parameters
-* Invalid training data
-* Non-finite feature values
-* Prediction before fitting
-* Prediction feature dimension mismatch
-* Unfitted model access
+Each component in `tests/include` has a dedicated CTest target that covers its
+normal use, validation rules, and relevant numerical edge cases.
 
 ## Design Philosophy
 
@@ -354,21 +263,10 @@ This means:
 * Separate reusable mathematical functionality from machine learning algorithms.
 * Add functionality when it is needed rather than building infrastructure in advance.
 
-## Roadmap
+## Future Work
 
-The project will gradually move from mathematical foundations toward machine learning implementations.
-
-Planned areas include:
-
-1. Mathematical and statistical foundations
-2. Data handling and preprocessing
-3. Regression
-4. Classification
-5. Clustering
-6. Additional machine learning algorithms
-7. Practical labs and experiments
-
-The roadmap is intentionally incremental. New components will be added as they become useful rather than establishing the entire framework upfront.
+Future additions may include more machine learning algorithms and practical
+experiments that build on the existing library components.
 
 ## License
 
