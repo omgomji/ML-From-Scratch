@@ -32,6 +32,13 @@
 
 namespace ml::math {
 
+/**
+ * @class Matrix
+ * @brief A row-major matrix with common operations for machine learning.
+ *
+ * Elements use zero-based (row, column) indexing. The class provides
+ * arithmetic, slicing, matrix composition, and element-wise utilities.
+ */
 class Matrix {
 private:
     std::vector<double> data_;
@@ -196,30 +203,37 @@ public:
     // DIMENSIONS
     // =========================================================================
 
+    /** @brief Return the number of rows. */
     size_t rows() const noexcept {
         return rows_;
     }
 
+    /** @brief Return the number of columns. */
     size_t cols() const noexcept {
         return cols_;
     }
 
+    /** @brief Return the total number of elements. */
     size_t size() const noexcept {
         return data_.size();
     }
 
+    /** @brief Check whether the matrix contains no elements. */
     bool empty() const noexcept {
         return data_.empty();
     }
 
+    /** @brief Return the matrix dimensions as (rows, columns). */
     std::pair<size_t, size_t> shape() const noexcept {
         return {rows_, cols_};
     }
 
+    /** @brief Check whether the row and column counts are equal. */
     bool is_square() const noexcept {
         return rows_ == cols_;
     }
 
+    /** @brief Check whether either dimension is one. */
     bool is_vector() const noexcept {
         return rows_ == 1 || cols_ == 1;
     }
@@ -429,6 +443,11 @@ public:
         return result;
     }
 
+    /**
+     * @brief Add another matrix to this matrix element-wise.
+     *
+     * @throws std::invalid_argument if the matrices have different shapes.
+     */
     Matrix& operator+=(const Matrix& other) {
         check_same_shape(other, "addition");
 
@@ -439,6 +458,11 @@ public:
         return *this;
     }
 
+    /**
+     * @brief Subtract another matrix from this matrix element-wise.
+     *
+     * @throws std::invalid_argument if the matrices have different shapes.
+     */
     Matrix& operator-=(const Matrix& other) {
         check_same_shape(other, "subtraction");
 
@@ -490,6 +514,7 @@ public:
     // SCALAR OPERATIONS
     // =========================================================================
 
+    /** @brief Add a scalar to every element. */
     Matrix operator+(double scalar) const {
         Matrix result(rows_, cols_);
 
@@ -500,6 +525,7 @@ public:
         return result;
     }
 
+    /** @brief Subtract a scalar from every element. */
     Matrix operator-(double scalar) const {
         Matrix result(rows_, cols_);
 
@@ -510,6 +536,7 @@ public:
         return result;
     }
 
+    /** @brief Multiply every element by a scalar. */
     Matrix operator*(double scalar) const {
         Matrix result(rows_, cols_);
 
@@ -520,6 +547,10 @@ public:
         return result;
     }
 
+    /**
+     * @brief Divide every element by a scalar.
+     * @throws std::runtime_error if the scalar is effectively zero.
+     */
     Matrix operator/(double scalar) const {
         if (std::abs(scalar) < numerical::DIVISION_TOL) {
             throw std::runtime_error("Division by zero");
@@ -535,6 +566,7 @@ public:
         return result;
     }
 
+    /** @brief Multiply every element by a scalar in place. */
     Matrix& operator*=(double scalar) {
         for (double& value : data_) {
             value *= scalar;
@@ -543,6 +575,10 @@ public:
         return *this;
     }
 
+    /**
+     * @brief Divide every element by a scalar in place.
+     * @throws std::runtime_error if the scalar is effectively zero.
+     */
     Matrix& operator/=(double scalar) {
         if (std::abs(scalar) < numerical::DIVISION_TOL) {
             throw std::runtime_error("Division by zero");
@@ -557,6 +593,7 @@ public:
         return *this;
     }
 
+    /** @brief Return a matrix with every element negated. */
     Matrix operator-() const {
         Matrix result(rows_, cols_);
 
@@ -781,12 +818,14 @@ public:
     // COMPARISON
     // =========================================================================
 
+    /** @brief Compare dimensions and elements for exact equality. */
     bool operator==(const Matrix& other) const {
         return rows_ == other.rows_
             && cols_ == other.cols_
             && data_ == other.data_;
     }
 
+    /** @brief Check whether dimensions or elements differ. */
     bool operator!=(const Matrix& other) const {
         return !(*this == other);
     }
@@ -875,6 +914,7 @@ public:
     }
 
 private:
+    // Validate an element coordinate before bounds-checked access.
     void check_bounds(size_t row, size_t col) const {
         if (row >= rows_ || col >= cols_) {
             throw std::out_of_range(

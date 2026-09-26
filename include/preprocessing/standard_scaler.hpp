@@ -1,6 +1,10 @@
 /**
  * @file standard_scaler.hpp
  * @brief Feature-wise standardization for machine learning inputs.
+ *
+ * Provides utilities to learn feature means and population standard
+ * deviations from training data, then apply the same transformation to
+ * other samples.
  */
 
 #ifndef ML_PREPROCESSING_STANDARD_SCALER_HPP

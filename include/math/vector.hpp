@@ -2,9 +2,12 @@
  * @file vector.hpp
  * @brief Mathematical vector class for machine learning.
  *
- * A lightweight vector implementation built from scratch using
- * standard C++ containers.
- */
+ * Provides a lightweight vector implementation built from standard C++
+ * containers, including:
+ * - Element-wise and scalar operations
+ * - Dot products and vector norms
+ * - Reductions and element-wise functions
+*/
 
 #ifndef ML_MATH_VECTOR_HPP
 #define ML_MATH_VECTOR_HPP

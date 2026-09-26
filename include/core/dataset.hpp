@@ -64,6 +64,7 @@ struct Dataset {
     /**
      * @brief Return the number of samples.
      */
+    /** @brief Return the number of samples in the dataset. */
     size_t size() const {
         return X.rows();
     }
@@ -71,6 +72,7 @@ struct Dataset {
     /**
      * @brief Return the number of features.
      */
+    /** @brief Return the number of feature columns. */
     size_t n_features() const {
         return X.cols();
     }
@@ -78,6 +80,7 @@ struct Dataset {
     /**
      * @brief Check whether the dataset contains no samples.
      */
+    /** @brief Check whether the dataset contains no samples. */
     bool empty() const {
         return size() == 0;
     }

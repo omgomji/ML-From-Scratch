@@ -24,6 +24,13 @@
 namespace ml {
 namespace models {
 
+/**
+ * @class KMeans
+ * @brief Cluster numerical samples with Lloyd's K-Means algorithm.
+ *
+ * The model uses k-means++ initialization and retains the run with the
+ * lowest inertia across the configured initializations.
+ */
 class KMeans {
 public:
     /**
@@ -257,15 +264,18 @@ public:
         return fitted_;
     }
 
+    /** @brief Return the configured number of clusters. */
     std::size_t n_clusters() const noexcept {
         return n_clusters_;
     }
 
+    /** @brief Return the number of features used during fitting. */
     std::size_t n_features() const {
         validate_fitted();
         return n_features_;
     }
 
+    /** @brief Return the iteration count for the selected initialization. */
     std::size_t iterations_run() const {
         validate_fitted();
         return iterations_run_;
@@ -274,6 +284,7 @@ public:
     /**
      * @brief Return within-cluster sum of squared distances.
      */
+    /** @brief Return the sum of squared distances to the nearest centroid. */
     double inertia() const {
         validate_fitted();
         return inertia_;
@@ -282,6 +293,7 @@ public:
     /**
      * @brief Return learned centroids.
      */
+    /** @brief Return the learned centroid matrix, with one centroid per row. */
     const math::Matrix& centroids() const {
         validate_fitted();
         return centroids_;
