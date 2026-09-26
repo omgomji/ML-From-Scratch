@@ -135,6 +135,19 @@ The project currently contains the mathematical foundation, basic core utilities
   * Single-sample and batch prediction
   * Input and fitted-state validation
 
+* **Gaussian Naive Bayes**
+
+  * Numerical feature classification
+  * Gaussian likelihood estimation
+  * Class prior estimation
+  * Per-class feature means and variances
+  * Variance smoothing
+  * Log-space probability calculations
+  * Binary and multiclass classification
+  * Class probability prediction
+  * Single-sample and batch prediction
+  * Input and fitted-state validation
+
 ## Project Structure
 
 ```text
@@ -162,7 +175,8 @@ ml-from-scratch-cpp/
 │       ├── decision_tree.hpp
 │       ├── knn.hpp
 │       ├── linear_regression.hpp
-│       └── logistic_regression.hpp
+│       ├── logistic_regression.hpp
+│       └── naive_bayes.hpp
 │
 └── tests/
     └── include/
@@ -183,7 +197,8 @@ ml-from-scratch-cpp/
             ├── test_decision_tree.cpp
             ├── test_knn.cpp
             ├── test_linear_regression.cpp
-            └── test_logistic_regression.cpp
+            ├── test_logistic_regression.cpp
+            └── test_naive_bayes.cpp
 ```
 
 The project structure will grow as new concepts, models, and experiments are implemented.
@@ -226,6 +241,7 @@ test_logistic_regression
 test_standard_scaler
 test_knn
 test_decision_tree
+test_naive_bayes
 ```
 
 The StandardScaler tests cover feature-wise population standardization,
@@ -272,6 +288,21 @@ The Decision Tree tests cover:
 * Non-finite feature values
 * Prediction before fitting
 * Prediction feature dimension mismatch
+
+The Naive Bayes tests cover:
+
+* Basic Gaussian Naive Bayes classification
+* Multiclass classification
+* Non-contiguous class labels
+* Learned class priors
+* Learned feature means and variances
+* Class probability prediction
+* Single-sample prediction
+* Constant-feature variance handling
+* Fitted-state validation
+* Invalid constructor parameters
+* Invalid training data
+* Invalid prediction input
 
 ## Design Philosophy
 

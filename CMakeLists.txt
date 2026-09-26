@@ -121,6 +121,14 @@ target_link_libraries(test_decision_tree
         ml_from_scratch
 )
 
+add_executable(test_naive_bayes
+    tests/include/models/test_naive_bayes.cpp
+)
+
+target_link_libraries(test_naive_bayes
+    PRIVATE
+        ml_from_scratch
+)
 
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -135,6 +143,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(test_standard_scaler PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_knn PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(test_decision_tree PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(test_naive_bayes PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 add_test(NAME NumericalTests COMMAND test_numerical)
@@ -148,3 +157,4 @@ add_test(NAME LogisticRegressionTests COMMAND test_logistic_regression)
 add_test(NAME StandardScalerTests COMMAND test_standard_scaler)
 add_test(NAME KNNTests COMMAND test_knn)
 add_test(NAME DecisionTreeTests COMMAND test_decision_tree)
+add_test(NAME NaiveBayesTests COMMAND test_naive_bayes)
