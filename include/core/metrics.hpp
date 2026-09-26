@@ -16,8 +16,39 @@
 
 #include <cmath>
 #include <stdexcept>
+#include <string>
 
 namespace ml::core::metrics {
+
+namespace detail {
+
+inline void validate_regression_inputs(
+    const math::Vector& y_true,
+    const math::Vector& y_pred,
+    const std::string& metric_name
+) {
+    if (y_true.size() != y_pred.size()) {
+        throw std::invalid_argument(
+            metric_name + ": y_true and y_pred must have the same size"
+        );
+    }
+
+    if (y_true.empty()) {
+        throw std::invalid_argument(
+            metric_name + ": cannot compute metric on empty vectors"
+        );
+    }
+
+    for (size_t i = 0; i < y_true.size(); ++i) {
+        if (!std::isfinite(y_true[i]) || !std::isfinite(y_pred[i])) {
+            throw std::invalid_argument(
+                metric_name + ": inputs must contain only finite values"
+            );
+        }
+    }
+}
+
+} // namespace detail
 
 // =============================================================================
 // REGRESSION METRICS
@@ -35,23 +66,13 @@ namespace ml::core::metrics {
  * @return Mean squared error.
  *
  * @throws std::invalid_argument if the vectors have different sizes
- *         or are empty.
+ *         are empty, or contain non-finite values.
  */
 inline double mean_squared_error(
     const math::Vector& y_true,
     const math::Vector& y_pred
 ) {
-    if (y_true.size() != y_pred.size()) {
-        throw std::invalid_argument(
-            "MSE: y_true and y_pred must have the same size"
-        );
-    }
-
-    if (y_true.empty()) {
-        throw std::invalid_argument(
-            "MSE: cannot compute metric on empty vectors"
-        );
-    }
+    detail::validate_regression_inputs(y_true, y_pred, "MSE");
 
     double sum = 0.0;
 
@@ -91,23 +112,13 @@ inline double root_mean_squared_error(
  * @return Mean absolute error.
  *
  * @throws std::invalid_argument if the vectors have different sizes
- *         or are empty.
+ *         are empty, or contain non-finite values.
  */
 inline double mean_absolute_error(
     const math::Vector& y_true,
     const math::Vector& y_pred
 ) {
-    if (y_true.size() != y_pred.size()) {
-        throw std::invalid_argument(
-            "MAE: y_true and y_pred must have the same size"
-        );
-    }
-
-    if (y_true.empty()) {
-        throw std::invalid_argument(
-            "MAE: cannot compute metric on empty vectors"
-        );
-    }
+    detail::validate_regression_inputs(y_true, y_pred, "MAE");
 
     double sum = 0.0;
 
@@ -136,17 +147,13 @@ inline double mean_absolute_error(
  * @return R² score.
  *
  * @throws std::invalid_argument if the vectors have different sizes,
- *         are empty, or contain fewer than two samples.
+ *         contain non-finite values, or contain fewer than two samples.
  */
 inline double r_squared(
     const math::Vector& y_true,
     const math::Vector& y_pred
 ) {
-    if (y_true.size() != y_pred.size()) {
-        throw std::invalid_argument(
-            "R²: y_true and y_pred must have the same size"
-        );
-    }
+    detail::validate_regression_inputs(y_true, y_pred, "R²");
 
     if (y_true.size() < 2) {
         throw std::invalid_argument(

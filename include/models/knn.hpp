@@ -20,8 +20,7 @@
 #include <utility>
 #include <vector>
 
-namespace ml {
-namespace models {
+namespace ml::models {
 
 /**
  * @class KNN
@@ -72,8 +71,8 @@ public:
      * @param y Integer-valued class label for each training sample.
      *
      * @throws std::invalid_argument if the data is empty, the sample and label
-     *         counts differ, k exceeds the number of samples, or a label is
-     *         not a finite integer.
+     *         counts differ, k exceeds the number of samples, a label is not
+     *         a finite integer, or a feature is non-finite.
      */
     void fit(const math::Matrix& X, const math::Vector& y) {
         validate_training_data(X, y);
@@ -96,7 +95,8 @@ public:
      * @return Predicted class labels.
      *
      * @throws std::runtime_error if the classifier has not been fitted.
-     * @throws std::invalid_argument if X has a different number of features.
+     * @throws std::invalid_argument if X has a different number of features
+     *         or contains non-finite values.
      */
     math::Vector predict(const math::Matrix& X) const {
         validate_prediction_data(X);
@@ -120,7 +120,7 @@ public:
      *
      * @throws std::runtime_error if the classifier has not been fitted.
      * @throws std::invalid_argument if sample has a different number of
-     *         features than the training data.
+     *         features than the training data or contains non-finite values.
      */
     double predict_single(const math::Vector& sample) const {
         validate_fitted();
@@ -130,6 +130,8 @@ public:
                 "KNN: sample feature count does not match training data"
             );
         }
+
+        validate_finite_features(sample);
 
         // Store {distance, training_index}.
         std::vector<std::pair<double, std::size_t>> distances;
@@ -296,6 +298,16 @@ private:
                 );
             }
         }
+
+        for (std::size_t i = 0; i < X.rows(); ++i) {
+            for (std::size_t j = 0; j < X.cols(); ++j) {
+                if (!std::isfinite(X(i, j))) {
+                    throw std::invalid_argument(
+                        "KNN: training features must be finite"
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -311,6 +323,26 @@ private:
                 "KNN: prediction feature count does not match training data"
             );
         }
+
+        for (std::size_t i = 0; i < X.rows(); ++i) {
+            for (std::size_t j = 0; j < X.cols(); ++j) {
+                if (!std::isfinite(X(i, j))) {
+                    throw std::invalid_argument(
+                        "KNN: prediction features must be finite"
+                    );
+                }
+            }
+        }
+    }
+
+    static void validate_finite_features(const math::Vector& sample) {
+        for (std::size_t i = 0; i < sample.size(); ++i) {
+            if (!std::isfinite(sample[i])) {
+                throw std::invalid_argument(
+                    "KNN: prediction features must be finite"
+                );
+            }
+        }
     }
 
     /**
@@ -325,7 +357,6 @@ private:
     }
 };
 
-} // namespace models
-} // namespace ml
+} // namespace ml::models
 
 #endif // ML_FROM_SCRATCH_KNN_HPP

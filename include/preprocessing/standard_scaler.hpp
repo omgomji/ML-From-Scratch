@@ -43,6 +43,18 @@ private:
         }
     }
 
+    static void validate_finite_features(const math::Matrix& X) {
+        for (std::size_t i = 0; i < X.rows(); ++i) {
+            for (std::size_t j = 0; j < X.cols(); ++j) {
+                if (!std::isfinite(X(i, j))) {
+                    throw std::invalid_argument(
+                        "StandardScaler requires finite feature values"
+                    );
+                }
+            }
+        }
+    }
+
 public:
     /**
      * @brief Construct an unfitted scaler.
@@ -53,7 +65,8 @@ public:
     /**
      * @brief Learn feature means and population standard deviations from X.
      *
-     * @throws std::invalid_argument if X has no samples or no features.
+     * @throws std::invalid_argument if X has no samples, no features, or
+     *         non-finite values.
      */
     void fit(const math::Matrix& X) {
         if (X.rows() == 0) {
@@ -67,6 +80,8 @@ public:
                 "StandardScaler requires at least one feature"
             );
         }
+
+        validate_finite_features(X);
 
         n_features_ = X.cols();
         means_ = math::Vector(n_features_);
@@ -107,7 +122,8 @@ public:
      * @brief Standardize X using statistics learned by fit().
      *
      * @throws std::runtime_error if the scaler has not been fitted.
-     * @throws std::invalid_argument if X has a different number of features.
+     * @throws std::invalid_argument if X has a different number of features
+     *         or contains non-finite values.
      */
     math::Matrix transform(const math::Matrix& X) const {
         check_fitted();
@@ -119,6 +135,8 @@ public:
                 ", got " + std::to_string(X.cols())
             );
         }
+
+        validate_finite_features(X);
 
         math::Matrix result(X.rows(), X.cols());
 

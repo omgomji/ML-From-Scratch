@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 
 using ml::math::Matrix;
@@ -205,6 +206,35 @@ void test_zero_feature_input() {
     assert(threw);
 }
 
+void test_non_finite_features() {
+    StandardScaler scaler;
+    bool fit_threw = false;
+
+    try {
+        scaler.fit(
+            Matrix{{1.0}, {std::numeric_limits<double>::quiet_NaN()}}
+        );
+    } catch (const std::invalid_argument&) {
+        fit_threw = true;
+    }
+
+    assert(fit_threw);
+
+    scaler.fit(Matrix{{1.0}, {2.0}});
+
+    bool transform_threw = false;
+
+    try {
+        scaler.transform(
+            Matrix{{std::numeric_limits<double>::infinity()}}
+        );
+    } catch (const std::invalid_argument&) {
+        transform_threw = true;
+    }
+
+    assert(transform_threw);
+}
+
 } // namespace
 
 int main() {
@@ -217,6 +247,7 @@ int main() {
     test_feature_mismatch();
     test_empty_input();
     test_zero_feature_input();
+    test_non_finite_features();
 
     std::cout << "All StandardScaler tests passed.\n";
     return 0;

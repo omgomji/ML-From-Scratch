@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <limits>
 #include <stdexcept>
 
 using ml::math::Matrix;
@@ -268,6 +269,37 @@ void test_non_integer_labels() {
     assert(threw);
 }
 
+void test_non_finite_features() {
+    bool training_threw = false;
+
+    try {
+        KNN model(1);
+        model.fit(
+            Matrix{{std::numeric_limits<double>::quiet_NaN()}},
+            Vector{0.0}
+        );
+    } catch (const std::invalid_argument&) {
+        training_threw = true;
+    }
+
+    assert(training_threw);
+
+    KNN model(1);
+    model.fit(Matrix{{1.0}}, Vector{0.0});
+
+    bool prediction_threw = false;
+
+    try {
+        model.predict_single(
+            Vector{std::numeric_limits<double>::infinity()}
+        );
+    } catch (const std::invalid_argument&) {
+        prediction_threw = true;
+    }
+
+    assert(prediction_threw);
+}
+
 } // namespace
 
 int main() {
@@ -282,6 +314,7 @@ int main() {
     test_prediction_before_fit();
     test_prediction_dimension_mismatch();
     test_non_integer_labels();
+    test_non_finite_features();
 
     return 0;
 }

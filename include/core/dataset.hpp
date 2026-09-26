@@ -16,6 +16,7 @@
 #include "../math/vector.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <random>
 #include <sstream>
@@ -61,25 +62,16 @@ struct Dataset {
         }
     }
 
-    /**
-     * @brief Return the number of samples.
-     */
     /** @brief Return the number of samples in the dataset. */
     size_t size() const {
         return X.rows();
     }
 
-    /**
-     * @brief Return the number of features.
-     */
     /** @brief Return the number of feature columns. */
     size_t n_features() const {
         return X.cols();
     }
 
-    /**
-     * @brief Check whether the dataset contains no samples.
-     */
     /** @brief Check whether the dataset contains no samples. */
     bool empty() const {
         return size() == 0;
@@ -175,7 +167,15 @@ inline Dataset load_csv(
             cell = cell.substr(first, last - first + 1);
 
             try {
-                row.push_back(std::stod(cell));
+                std::size_t parsed_characters = 0;
+                const double value = std::stod(cell, &parsed_characters);
+
+                if (parsed_characters != cell.size() ||
+                    !std::isfinite(value)) {
+                    throw std::invalid_argument("Invalid numeric value");
+                }
+
+                row.push_back(value);
             } catch (const std::exception&) {
                 throw std::runtime_error(
                     "Invalid numeric value in CSV file: " + cell

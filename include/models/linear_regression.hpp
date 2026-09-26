@@ -13,6 +13,7 @@
 #include "../math/vector.hpp"
 #include "../math/linalg.hpp"
 
+#include <cmath>
 #include <cstddef>
 #include <stdexcept>
 #include <string>
@@ -86,6 +87,34 @@ private:
             throw std::invalid_argument(
                 "Number of samples in X must match size of y"
             );
+        }
+
+        for (std::size_t i = 0; i < X.rows(); ++i) {
+            for (std::size_t j = 0; j < X.cols(); ++j) {
+                if (!std::isfinite(X(i, j))) {
+                    throw std::invalid_argument(
+                        "LinearRegression features must be finite"
+                    );
+                }
+            }
+
+            if (!std::isfinite(y[i])) {
+                throw std::invalid_argument(
+                    "LinearRegression targets must be finite"
+                );
+            }
+        }
+    }
+
+    void validate_prediction_features(const math::Matrix& X) const {
+        for (std::size_t i = 0; i < X.rows(); ++i) {
+            for (std::size_t j = 0; j < X.cols(); ++j) {
+                if (!std::isfinite(X(i, j))) {
+                    throw std::invalid_argument(
+                        "LinearRegression features must be finite"
+                    );
+                }
+            }
         }
     }
 
@@ -165,7 +194,7 @@ public:
           fitted_(false),
           n_features_(0) {
 
-        if (learning_rate <= 0.0) {
+        if (!std::isfinite(learning_rate_) || learning_rate_ <= 0.0) {
             throw std::invalid_argument(
                 "Learning rate must be positive"
             );
@@ -177,7 +206,7 @@ public:
             );
         }
 
-        if (tolerance < 0.0) {
+        if (!std::isfinite(tolerance_) || tolerance_ < 0.0) {
             throw std::invalid_argument(
                 "Tolerance must be non-negative"
             );
@@ -200,7 +229,8 @@ public:
      * @param method Fitting algorithm to use.
      *
      * @throws std::invalid_argument if X is empty, has no features, y has a
-     *         different number of samples, or method is unknown.
+     *         different number of samples, contains non-finite values, or
+     *         method is unknown.
      * @throws std::runtime_error if normal-equation solving fails.
      */
     void fit(
@@ -244,7 +274,8 @@ public:
      * @return Predicted target value for each row of X.
      *
      * @throws std::runtime_error if the model has not been fitted.
-     * @throws std::invalid_argument if X has a different number of features.
+     * @throws std::invalid_argument if X has a different number of features
+     *         or contains non-finite values.
      */
     math::Vector predict(const math::Matrix& X) const {
         check_fitted();
@@ -257,6 +288,8 @@ public:
                 std::to_string(X.cols())
             );
         }
+
+        validate_prediction_features(X);
 
         math::Matrix X_test =
             fit_intercept_ ? add_intercept(X) : X;
@@ -271,7 +304,8 @@ public:
      * @return Predicted target value.
      *
      * @throws std::runtime_error if the model has not been fitted.
-     * @throws std::invalid_argument if x has a different number of features.
+     * @throws std::invalid_argument if x has a different number of features
+     *         or contains non-finite values.
      */
     double predict_single(const math::Vector& x) const {
         check_fitted();
@@ -283,6 +317,14 @@ public:
                 ", got " +
                 std::to_string(x.size())
             );
+        }
+
+        for (std::size_t i = 0; i < x.size(); ++i) {
+            if (!std::isfinite(x[i])) {
+                throw std::invalid_argument(
+                    "LinearRegression features must be finite"
+                );
+            }
         }
 
         double result = fit_intercept_ ? theta_[0] : 0.0;
@@ -361,8 +403,10 @@ public:
 
     /**
      * @brief Return the number of features used to fit the model.
+     * @throws std::runtime_error if the model has not been fitted.
      */
-    std::size_t n_features() const noexcept {
+    std::size_t n_features() const {
+        check_fitted();
         return n_features_;
     }
 

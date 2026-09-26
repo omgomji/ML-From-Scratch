@@ -9,6 +9,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <limits>
 
 using ml::math::Matrix;
 using ml::math::Vector;
@@ -188,6 +189,59 @@ void test_predict_before_fit() {
     assert(threw);
 }
 
+void test_rejects_non_finite_values() {
+    bool threw = false;
+
+    try {
+        LinearRegression model(std::numeric_limits<double>::quiet_NaN());
+    } catch (const std::invalid_argument&) {
+        threw = true;
+    }
+
+    assert(threw);
+
+    LinearRegression model;
+    threw = false;
+
+    try {
+        model.fit(
+            Matrix{{1.0}, {std::numeric_limits<double>::infinity()}},
+            Vector{1.0, 2.0}
+        );
+    } catch (const std::invalid_argument&) {
+        threw = true;
+    }
+
+    assert(threw);
+
+    model.fit(Matrix{{1.0}, {2.0}}, Vector{1.0, 2.0});
+
+    threw = false;
+
+    try {
+        model.predict_single(
+            Vector{std::numeric_limits<double>::quiet_NaN()}
+        );
+    } catch (const std::invalid_argument&) {
+        threw = true;
+    }
+
+    assert(threw);
+}
+
+void test_n_features_requires_fitting() {
+    LinearRegression model;
+    bool threw = false;
+
+    try {
+        (void)model.n_features();
+    } catch (const std::runtime_error&) {
+        threw = true;
+    }
+
+    assert(threw);
+}
+
 } // namespace
 
 int main() {
@@ -198,6 +252,8 @@ int main() {
     test_no_intercept();
     test_invalid_input();
     test_predict_before_fit();
+    test_rejects_non_finite_values();
+    test_n_features_requires_fitting();
 
     std::cout << "All Linear Regression tests passed.\n";
     return 0;

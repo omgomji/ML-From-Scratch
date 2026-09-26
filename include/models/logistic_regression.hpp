@@ -13,6 +13,7 @@
 #include "../math/vector.hpp"
 #include "../math/numerical.hpp"
 
+#include <cmath>
 #include <cstddef>
 #include <stdexcept>
 #include <string>
@@ -87,6 +88,28 @@ private:
                 throw std::invalid_argument(
                     "LogisticRegression targets must be 0 or 1"
                 );
+            }
+        }
+
+        for (std::size_t i = 0; i < X.rows(); ++i) {
+            for (std::size_t j = 0; j < X.cols(); ++j) {
+                if (!std::isfinite(X(i, j))) {
+                    throw std::invalid_argument(
+                        "LogisticRegression features must be finite"
+                    );
+                }
+            }
+        }
+    }
+
+    void validate_prediction_features(const math::Matrix& X) const {
+        for (std::size_t i = 0; i < X.rows(); ++i) {
+            for (std::size_t j = 0; j < X.cols(); ++j) {
+                if (!std::isfinite(X(i, j))) {
+                    throw std::invalid_argument(
+                        "LogisticRegression features must be finite"
+                    );
+                }
             }
         }
     }
@@ -174,7 +197,7 @@ public:
           fitted_(false),
           n_features_(0) {
 
-        if (learning_rate <= 0.0) {
+        if (!std::isfinite(learning_rate_) || learning_rate_ <= 0.0) {
             throw std::invalid_argument(
                 "Learning rate must be positive"
             );
@@ -186,7 +209,7 @@ public:
             );
         }
 
-        if (tolerance < 0.0) {
+        if (!std::isfinite(tolerance_) || tolerance_ < 0.0) {
             throw std::invalid_argument(
                 "Tolerance must be non-negative"
             );
@@ -202,6 +225,8 @@ public:
      *
      * @param X Training feature matrix.
      * @param y Binary target vector containing only 0.0 and 1.0.
+     * @throws std::invalid_argument if the input shape is invalid or the
+     *         feature values are non-finite.
      */
     void fit(
         const math::Matrix& X,
@@ -227,6 +252,9 @@ public:
      * @brief Predict positive-class probabilities.
      *
      * Returns P(y = 1 | x) for every sample.
+     *
+     * @throws std::invalid_argument if X has a different number of features
+     *         or contains non-finite values.
      */
     math::Vector predict_proba(
         const math::Matrix& X
@@ -241,6 +269,8 @@ public:
                 std::to_string(X.cols())
             );
         }
+
+        validate_prediction_features(X);
 
         const math::Matrix X_test =
             fit_intercept_ ? add_intercept(X) : X;
@@ -294,6 +324,14 @@ public:
                 ", got " +
                 std::to_string(x.size())
             );
+        }
+
+        for (std::size_t i = 0; i < x.size(); ++i) {
+            if (!std::isfinite(x[i])) {
+                throw std::invalid_argument(
+                    "LogisticRegression features must be finite"
+                );
+            }
         }
 
         double logit =
@@ -374,7 +412,12 @@ public:
         return fitted_;
     }
 
-    std::size_t n_features() const noexcept {
+    /**
+     * @brief Return the number of features used during fitting.
+     * @throws std::runtime_error if the model has not been fitted.
+     */
+    std::size_t n_features() const {
+        check_fitted();
         return n_features_;
     }
 

@@ -162,6 +162,8 @@ public:
             );
         }
 
+        validate_finite_features(sample);
+
         const Node* node = root_.get();
 
         // Traverse the tree until a leaf is reached.
@@ -484,8 +486,7 @@ private:
                 // Any value between the two feature values
                 // produces the same partition.
                 const double threshold =
-                    previous +
-                    (current - previous) * 0.5;
+                    previous * 0.5 + current * 0.5;
 
                 // Features and thresholds are examined in
                 // deterministic order, so strict improvement
@@ -732,6 +733,16 @@ private:
                         "prediction features must be finite"
                     );
                 }
+            }
+        }
+    }
+
+    static void validate_finite_features(const math::Vector& sample) {
+        for (std::size_t i = 0; i < sample.size(); ++i) {
+            if (!std::isfinite(sample[i])) {
+                throw std::invalid_argument(
+                    "DecisionTreeClassifier: prediction features must be finite"
+                );
             }
         }
     }

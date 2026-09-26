@@ -21,8 +21,7 @@
 #include <utility>
 #include <vector>
 
-namespace ml {
-namespace models {
+namespace ml::models {
 
 /**
  * @class KMeans
@@ -281,18 +280,12 @@ public:
         return iterations_run_;
     }
 
-    /**
-     * @brief Return within-cluster sum of squared distances.
-     */
     /** @brief Return the sum of squared distances to the nearest centroid. */
     double inertia() const {
         validate_fitted();
         return inertia_;
     }
 
-    /**
-     * @brief Return learned centroids.
-     */
     /** @brief Return the learned centroid matrix, with one centroid per row. */
     const math::Matrix& centroids() const {
         validate_fitted();
@@ -688,7 +681,6 @@ private:
     }
 };
 
-} // namespace models
-} // namespace ml
+} // namespace ml::models
 
 #endif // ML_FROM_SCRATCH_KMEANS_HPP

@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 
 using ml::math::Vector;
@@ -208,6 +209,40 @@ void test_regression_metrics_reject_empty_vectors() {
     }
 
     assert(threw);
+}
+
+void test_regression_metrics_reject_non_finite_values() {
+    const Vector y_true{1.0, 2.0};
+    const Vector y_pred{
+        1.0,
+        std::numeric_limits<double>::quiet_NaN()
+    };
+
+    bool mse_threw = false;
+    bool mae_threw = false;
+    bool r_squared_threw = false;
+
+    try {
+        (void)ml::core::metrics::mean_squared_error(y_true, y_pred);
+    } catch (const std::invalid_argument&) {
+        mse_threw = true;
+    }
+
+    try {
+        (void)ml::core::metrics::mean_absolute_error(y_true, y_pred);
+    } catch (const std::invalid_argument&) {
+        mae_threw = true;
+    }
+
+    try {
+        (void)ml::core::metrics::r_squared(y_true, y_pred);
+    } catch (const std::invalid_argument&) {
+        r_squared_threw = true;
+    }
+
+    assert(mse_threw);
+    assert(mae_threw);
+    assert(r_squared_threw);
 }
 
 // =============================================================================
@@ -543,6 +578,7 @@ int main() {
     test_r_squared_constant_target_imperfect();
     test_regression_metrics_reject_mismatched_sizes();
     test_regression_metrics_reject_empty_vectors();
+    test_regression_metrics_reject_non_finite_values();
 
     // Classification
     test_accuracy();

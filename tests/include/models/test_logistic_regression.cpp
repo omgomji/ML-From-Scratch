@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 
 using ml::math::Matrix;
@@ -340,6 +341,60 @@ void test_numerically_stable_probability() {
     }
 }
 
+void test_rejects_non_finite_features_and_parameters() {
+    bool threw = false;
+
+    try {
+        LogisticRegression model(
+            std::numeric_limits<double>::infinity()
+        );
+    } catch (const std::invalid_argument&) {
+        threw = true;
+    }
+
+    assert(threw);
+
+    LogisticRegression model;
+    threw = false;
+
+    try {
+        model.fit(
+            Matrix{{1.0}, {std::numeric_limits<double>::quiet_NaN()}},
+            Vector{0.0, 1.0}
+        );
+    } catch (const std::invalid_argument&) {
+        threw = true;
+    }
+
+    assert(threw);
+
+    model.fit(Matrix{{1.0}, {2.0}}, Vector{0.0, 1.0});
+    threw = false;
+
+    try {
+        model.predict_proba_single(
+            Vector{std::numeric_limits<double>::infinity()}
+        );
+    } catch (const std::invalid_argument&) {
+        threw = true;
+    }
+
+    assert(threw);
+}
+
+void test_n_features_requires_fitting() {
+    LogisticRegression model;
+    bool threw = false;
+
+    try {
+        (void)model.n_features();
+    } catch (const std::runtime_error&) {
+        threw = true;
+    }
+
+    assert(threw);
+}
+
 } // namespace
 
 int main() {
@@ -354,6 +409,8 @@ int main() {
     test_feature_dimension_mismatch();
 
     test_numerically_stable_probability();
+    test_rejects_non_finite_features_and_parameters();
+    test_n_features_requires_fitting();
 
     std::cout
         << "All Logistic Regression tests passed.\n";

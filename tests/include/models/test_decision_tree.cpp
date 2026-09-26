@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <limits>
 #include <stdexcept>
 
 using ml::math::Matrix;
@@ -464,6 +465,23 @@ void test_prediction_dimension_mismatch() {
     assert(threw);
 }
 
+void test_non_finite_single_prediction() {
+    DecisionTreeClassifier model;
+    model.fit(Matrix{{1.0}, {2.0}}, Vector{0.0, 1.0});
+
+    bool threw = false;
+
+    try {
+        model.predict_single(
+            Vector{std::numeric_limits<double>::quiet_NaN()}
+        );
+    } catch (const std::invalid_argument&) {
+        threw = true;
+    }
+
+    assert(threw);
+}
+
 // =============================================================================
 // MAIN
 // =============================================================================
@@ -490,6 +508,7 @@ int main() {
 
     test_prediction_before_fit();
     test_prediction_dimension_mismatch();
+    test_non_finite_single_prediction();
 
     return 0;
 }

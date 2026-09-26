@@ -186,6 +186,28 @@ void test_load_csv_rejects_inconsistent_columns() {
     std::remove(filename.c_str());
 }
 
+void test_load_csv_rejects_invalid_numbers() {
+    const std::string filename = "test_invalid_numbers.csv";
+
+    {
+        std::ofstream file(filename);
+        file << "x,target\n";
+        file << "1.0extra,2.0\n";
+    }
+
+    bool threw = false;
+
+    try {
+        (void)ml::core::load_csv(filename);
+    } catch (const std::runtime_error&) {
+        threw = true;
+    }
+
+    assert(threw);
+
+    std::remove(filename.c_str());
+}
+
 // =============================================================================
 // Train/test split
 // =============================================================================
@@ -404,6 +426,7 @@ int main() {
     test_load_csv_without_header();
     test_load_csv_rejects_missing_file();
     test_load_csv_rejects_inconsistent_columns();
+    test_load_csv_rejects_invalid_numbers();
 
     test_train_test_split_sizes();
     test_train_test_split_without_shuffle();
