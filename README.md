@@ -14,7 +14,7 @@ The goal is to understand how machine learning algorithms work by implementing t
 
 ## Current Status
 
-The project currently contains the mathematical foundation, basic core utilities, preprocessing, and regression and classification models.
+The project currently contains the mathematical foundation, basic core utilities, preprocessing, regression, classification, and clustering models.
 
 ### Mathematical Foundation
 
@@ -148,6 +148,21 @@ The project currently contains the mathematical foundation, basic core utilities
   * Single-sample and batch prediction
   * Input and fitted-state validation
 
+* **K-Means**
+
+  * Lloyd's clustering algorithm
+  * Euclidean distance
+  * K-means++ initialization
+  * Multiple random initializations (`n_init`)
+  * Configurable convergence tolerance
+  * Configurable maximum iterations
+  * Deterministic initialization with a random seed
+  * Empty-cluster handling
+  * Inertia calculation
+  * Cluster prediction
+  * Distance transformation
+  * Input and fitted-state validation
+
 ## Project Structure
 
 ```text
@@ -173,6 +188,7 @@ ml-from-scratch-cpp/
 │   │
 │   └── models/
 │       ├── decision_tree.hpp
+│       ├── kmeans.hpp
 │       ├── knn.hpp
 │       ├── linear_regression.hpp
 │       ├── logistic_regression.hpp
@@ -195,6 +211,7 @@ ml-from-scratch-cpp/
         │
         └── models/
             ├── test_decision_tree.cpp
+            ├── test_kmeans.cpp
             ├── test_knn.cpp
             ├── test_linear_regression.cpp
             ├── test_logistic_regression.cpp
@@ -242,6 +259,7 @@ test_standard_scaler
 test_knn
 test_decision_tree
 test_naive_bayes
+test_kmeans
 ```
 
 The StandardScaler tests cover feature-wise population standardization,
@@ -303,6 +321,23 @@ The Naive Bayes tests cover:
 * Invalid constructor parameters
 * Invalid training data
 * Invalid prediction input
+
+The K-Means tests cover:
+
+* Basic clustering
+* Learned centroid values
+* Single-sample prediction
+* Batch prediction
+* Distance transformation
+* `fit_predict`
+* Deterministic fitting with a fixed seed
+* Fitted-state validation
+* Invalid constructor parameters
+* Invalid training data
+* Non-finite feature values
+* Prediction before fitting
+* Prediction feature dimension mismatch
+* Unfitted model access
 
 ## Design Philosophy
 
